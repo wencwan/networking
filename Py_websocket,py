@@ -1,10 +1,4 @@
 
-```ruby
-require 'redcarpet'
-markdown = Redcarpet.new("Hello World!")
-puts markdown.to_html
-```
-
 #coding=utf8
 #!/usr/bin/python
 
