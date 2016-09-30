@@ -1,6 +1,4 @@
 
-#!higlight python
-
 #coding=utf8
 #!/usr/bin/python
 
@@ -71,7 +69,7 @@ def parse_data(msg):
         i += 1
 
 
-    print (u"总长度是：%d" % int(g_code_length))    
+    print (u"the length is：%d" % int(g_code_length))    
     return raw_str  
 
 
@@ -102,12 +100,12 @@ def sendMessage(message):
             #back_str.append(chr(data_length >> 8))
             #back_str.append(chr(data_length & 0xFF))      
         else :
-                print (u'太长了')        
+                print (u'too long')        
         msg = ''
         for c in back_str:
             msg += c;
         back_str = str(msg)   + message_utf_8#.encode('utf-8')    
-        #connection.send(str.encode(str(u"\x00%s\xFF\n\n" % message))) #这个是旧版
+        #connection.send(str.encode(str(u"\x00%s\xFF\n\n" % message))) #an obsolete version
         #print (u'send message:' +  message)
         if back_str != None and len(back_str) > 0:
             print (back_str)
@@ -119,14 +117,14 @@ def deleteconnection(item):
     del connectionlist['connection'+item]
 
 
-class WebSocket(threading.Thread):#继承Thread
+class WebSocket(threading.Thread):#Inherit Thread class
 
 
     GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
 
 
     def __init__(self,conn,index,name,remote, path="/"):
-        threading.Thread.__init__(self)#初始化父类Thread
+        threading.Thread.__init__(self)#Initiate Super Thread
         self.conn = conn
         self.index = index
         self.name = name
@@ -135,7 +133,7 @@ class WebSocket(threading.Thread):#继承Thread
         self.buffer = ""
         self.buffer_utf8 = ""
         self.length_buffer = 0
-    def run(self):#重载Thread的run
+    def run(self):#override run method
         print('Socket%s Start!' % self.index)
         headers = {}
         self.handshaken = False
@@ -183,7 +181,7 @@ class WebSocket(threading.Thread):#继承Thread
                     continue
                 if g_code_length == 0:
                     get_datalength(mm)
-                #接受的长度
+                #accepted length
                 self.length_buffer = self.length_buffer + len(mm)
                 self.buffer = self.buffer + mm
                 if self.length_buffer - g_header_length < g_code_length :
@@ -197,12 +195,12 @@ class WebSocket(threading.Thread):#继承Thread
                         sendMessage(u'%s %s say: %s' % (nowTime, self.remote, self.name+' Logout'))                      
                         deleteconnection(str(self.index))
                         self.conn.close()
-                        break #退出线程
+                        break #exit thread
                     else:
                         #print (u'Socket%s Got msg:%s from %s!' % (self.index, msg_unicode, self.remote))
                         nowTime = time.strftime(u'%H:%M:%S',time.localtime(time.time()))
                         sendMessage(u'%s %s say: %s' % (nowTime, self.remote, msg_unicode))  
-                    #重置buffer和bufferlength
+                    #reset buffer and bufferlength
                     self.buffer_utf8 = ""
                     self.buffer = ""
                     g_code_length = 0
@@ -231,7 +229,7 @@ class WebSocketServer(object):
 
             username=address[0]     
             newSocket = WebSocket(connection,i,username,address)
-            newSocket.start() #开始线程,执行run函数
+            newSocket.start() #start the thread
             connectionlist['connection'+str(i)]=connection
             i = i + 1
 
@@ -239,7 +237,4 @@ class WebSocketServer(object):
 if __name__ == "__main__":
     server = WebSocketServer()
     server.begin()
-
-```
-
 
